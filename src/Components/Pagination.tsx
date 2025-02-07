@@ -1,5 +1,5 @@
-import React from "react";
-const Pagination = () => {
+import * as React from "react";
+
+export default function Pagination() {
   return <></>;
-};
-export default Pagination;
+}
