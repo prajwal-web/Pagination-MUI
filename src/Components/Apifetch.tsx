@@ -1,35 +1,33 @@
+import React, { useState, useEffect } from "react";
 import getImageApi from "./getImageApi";
-import { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
-import { Grid2, Typography } from "@mui/material";
+import ImageGallery from "./ImageGallery";
+import Pagination from "./Pagination";
 
 const Apifetch = () => {
   const [images, setImages] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const imagesPerPage = 10;
+
   useEffect(() => {
-    getImageApi().then((data: any) => {
-      setImages(data);
-      console.log(data);
-    });
+    getImageApi().then((data) => setImages(data));
   }, []);
+
+  const totalPages = Math.ceil(images.length / imagesPerPage);
+  const currentImages = images.slice(
+    (currentPage - 1) * imagesPerPage,
+    currentPage * imagesPerPage
+  );
+
   return (
     <>
-      <Grid2 container spacing={10} sx={{ m: 5, marginTop: 10 }}>
-        {images.map((image: any) => (
-          <Grid2 size={{ xs: 12, sm: 6, md: 6 }} key={image.id}>
-            <Box
-              component="img"
-              sx={{
-                width: "100%",
-                height: "100%",
-              }}
-              alt={image.title}
-              src={image.download_url}
-            />
-            <Typography textAlign="center">{image.author}</Typography>
-          </Grid2>
-        ))}
-      </Grid2>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
+      <ImageGallery images={currentImages} />
     </>
   );
 };
+
 export default Apifetch;
